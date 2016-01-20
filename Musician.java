@@ -57,4 +57,3 @@ class Musician extends Person{
 		return display() + " " + "musician is a vocalist of a " + genre + " " + "music group " + bandName;
 	}
 }
- 
