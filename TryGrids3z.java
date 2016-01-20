@@ -1,3 +1,11 @@
+/*
+-- This is a java swing program that creates a GUI;
+-- Initially it displays 5 buttons with a picture of a musician on it;
+-- When one of these buttons is pressed a musician object is displayed; 
+-- And two additional buttons at the bottom of the container - "Add Musician" and "Delete Musician" that allow to add a musician or delete one respectively;
+
+*/
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.swing.*;
@@ -10,8 +18,9 @@ import java.nio.file.*;
 import java.nio.charset.StandardCharsets;
 
 public class TryGrids3z extends JFrame implements ActionListener{
-	
-		 JButton button1;
+		
+		//Declaring fields of a class 
+		 JButton button1;  
 		 JButton button2;
 		 JButton button3;
 		 JButton button4;
@@ -25,7 +34,7 @@ public class TryGrids3z extends JFrame implements ActionListener{
 		 ArrayList<Musician> list = new ArrayList<Musician>();
 		 ArrayList<JButton> buttons = new ArrayList<JButton>();
 		 
-		 
+		 //Constructor that builds the GUI and initializes it
     public TryGrids3z() {
 		
 		 JPanel panel0 = new JPanel(new BorderLayout());
@@ -92,9 +101,12 @@ public class TryGrids3z extends JFrame implements ActionListener{
 		 buttonPanel.repaint();
 		 
 	}
-		
+		//Method used to read musicians data line by line from a file in a working directory 
+		//It splits the line on comma, declares each part as a string with a coresponding name and pops it into tempObj2 creating a musician object 
+		//Finally places each of the musician object into an arraylist
 		public void getDataFromFile(){
 		
+		//arralist method used to clear the arraylist before placing musicians 
 		list.clear();
 		
 		try{
@@ -122,7 +134,9 @@ public class TryGrids3z extends JFrame implements ActionListener{
 			ioe.printStackTrace();
 		}
 		}
-				
+		
+		//Method used to create a new button 
+		//Opens JFileChooser and displays current working directory, allowing user to browse for an image and place it onto the button
 		public void createButton(){
 			
 			    JButton button = new JButton();
@@ -142,6 +156,7 @@ public class TryGrids3z extends JFrame implements ActionListener{
 						img=ImageIO.read(file);
 						ImageIcon icon = new ImageIcon(img);
 						button.setIcon(icon);
+						//cleanning off the pannel to allow for the new button to show up
 						buttonPanel.revalidate();
 						buttonPanel.repaint();	
 					}
@@ -150,7 +165,9 @@ public class TryGrids3z extends JFrame implements ActionListener{
 					}
 				buttons.add(button);
 		}
-				
+		
+		//Method creates a new musician object from a user input
+		//And uses another method to append musician to an existing file
 		public void createMusician(){
 				
 				String name = JOptionPane.showInputDialog("Enter musician name");
@@ -168,11 +185,15 @@ public class TryGrids3z extends JFrame implements ActionListener{
 				joiner.add(name).add(instrument).add(genre).add(band);
 				String joinedString = joiner.toString(); 		
 				Musician tempObj2 = new Musician(name, instrument, genre, band);
-				list.add(tempObj2);		
+				list.add(tempObj2);	
+				//This method appends musician object to a file 
 				this.appendToFile(joinedString);
 		
 		}
-		
+		//Takes string name of a musician as a parameter value
+		//Reads the file with musicians line after line looking for the match to the paramether value 
+		//Pops each read line onto temporary file except the one containing parameter value
+		//Replaces the data in original file with data from temporary
 		public void removeDataFromFile(String mName){
 			
 			String currentLine;
@@ -208,32 +229,28 @@ public class TryGrids3z extends JFrame implements ActionListener{
 			}
 		}
 		
-
-	
-		/*public void deleteButton(int j){
-			
-			buttonPanel.remove(buttons(j));
-			buttonPanel.revalidate();
-			buttonPanel.repaint();
-		}*/
-			
+		//Method that creates responses to the actionlistener when vrious buttons are pressed
 		public void actionPerformed(ActionEvent e){
 			
+			//Button "add musician" when pressed runs two methods one creating a new button and another new musician 
 			if(e.getSource() == extr){
 				this.createButton();
 				this.createMusician();
 			}
 			
+			//Button "delete musician" when pressed deletes musician from a file with a corresponding button
 			if(e.getSource() == extr1){
-				
+				//Asks the user to input the name of the musician to be deleted
 				String mName = JOptionPane.showInputDialog("Enter name of musician you want to delete");
 				
+				//Reads data from file 
 				this.getDataFromFile();
-				
+				//Loops through the arraylist with musicians
 				for(int j=0; j<list.size(); j++){
-					
+					//Conversts name of the musician to string object
 					String someName = list.get(j).getName().toString();
-					
+					//Compares user input with the musician name and if maches, runs removeDataFromFile method deleting musician object and a corresponding 
+					//Button from a buttonPanel
 					if(someName.equals(mName)){
 					
 						this.removeDataFromFile(mName);
@@ -244,13 +261,14 @@ public class TryGrids3z extends JFrame implements ActionListener{
 					}
 				}
 			}
-			
+			//Loops through the button arraylist checking for which button has been pressed 
 			for(int i=0; i<buttons.size(); i++){
 				
 				if(e.getSource() == buttons.get(i)){
 					
 					this.getDataFromFile();
-					
+					//Looks for the corresponding musician in the musician arraylist and displays the musician
+					//Running corresponding method from the Musician class
 					if(list.get(i).getInstrument() == null && list.get(i).getBandName() == null){
 								JOptionPane.showMessageDialog(null, list.get(i).showMusician2());
 					}	
@@ -264,7 +282,8 @@ public class TryGrids3z extends JFrame implements ActionListener{
 				}
 			}
 		}
-			
+		//Method takes string (which represents musician object) as a parameter value
+		//And write is to an existing file with musicians 
 		public void appendToFile(String s){
 				
 			try{
@@ -279,13 +298,13 @@ public class TryGrids3z extends JFrame implements ActionListener{
 			}
 		}
 	
-	
+	//Main method which creates new instance of a JFrame initializing GUI 
 	public static void main(String[] args) {
 	
         TryGrids3z frame = new TryGrids3z();
         frame.pack();
         frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(600,600);
+		frame.setSize(470,600);
     }
 }
